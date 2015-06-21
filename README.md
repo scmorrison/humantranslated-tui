@@ -3,6 +3,18 @@ HumanTranslated CLI client
 
 The CLI client is the first client to test and integrate new API features. 
 
+# Build
+
+```
+gulp js:build
+```
+
+# Test
+
+```
+make test
+```
+
 # Usage
 
 ```bash
@@ -11,7 +23,7 @@ The CLI client is the first client to test and integrate new API features.
 #
 
 # oauth2 configuration
-humantranslated config
+./bin/humantranslated config
 
 # register for a new account
 # POST /api/v1/register
@@ -31,7 +43,7 @@ humantranslated config
 ```
 
 ```bash
-humantranslated register --user user.json
+./bin/humantranslated register --user user.json
 ```
 
 #
@@ -40,27 +52,27 @@ humantranslated register --user user.json
 
 ```bash
 # list stories
-humantranslated story list
+./bin/humantranslated story list
 ```
 
 ```bash
 # display story
-humantranslated story view --story-id STORYID
+./bin/humantranslated story view --story-id STORYID
 ```
 
 ```bash
 # add story
-humantranslated story new STORY.json
+./bin/humantranslated story new STORY.json
 ```
 
 ```bash
 # modify story
-humantranslated story modify --story-id STORYID STORY.json
+./bin/humantranslated story modify --story-id STORYID STORY.json
 ```
 
 ```bash
 # delete story
-humantranslated story delete --story-id STORYID
+./bin/humantranslated story delete --story-id STORYID
 ```
 
 #
@@ -69,27 +81,27 @@ humantranslated story delete --story-id STORYID
 
 # list categories
 ```bash
-humantranslated category list
+./bin/humantranslated category list
 ```
 
 ```bash
 # display category
-humantranslated category view --category-name CATEGORYNAME
+./bin/humantranslated category view --category-name CATEGORYNAME
 ```
 
 ```bash
 # add category
-humantranslated category new --category-name CATEGORYNAME
+./bin/humantranslated category new --category-name CATEGORYNAME
 ```
 
 ```bash
 # modify category
-humantranslated category modify --category-name OLDCATEGORYNAME --new-name NEWCATEGORYNAME
+./bin/humantranslated category modify --category-name OLDCATEGORYNAME --new-name NEWCATEGORYNAME
 ```
 
 ```bash
 # delete category
-humantranslated category delete --category-name CATEGORYNAME
+./bin/humantranslated category delete --category-name CATEGORYNAME
 ```
 
 ```

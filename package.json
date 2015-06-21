@@ -1,0 +1,42 @@
+{
+  "name": "humantranslated",
+  "description": "HumanTranslated CLI client",
+  "version": "0.0.1",
+  "main": "index.js",
+  "homepage": "https://github.com/scmorrison/humantranslated-cli",
+  "author": {
+    "name": "scmorrison",
+    "email": "scmorrison@users.noreply.github.com",
+    "url": "http://scmorrison.github.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:scmorrison/humantranslated-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/scmorrison/humantranslated-cli/issues"
+  },
+  "licenses": [
+    {
+      "type": "GPLv3"
+    }
+  ],
+  "preferGlobal": true,
+  "bin": {
+    "cli": "./bin/humantranslated"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "colors": "^0.6.2",
+    "commander": "^2.2.0",
+    "prettyjson": "^1.1.2"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "mocha": "^1.18.2",
+    "gulp": "^3.6.1",
+    "gulp-plumber": "^0.6.1"
+  }
+}
