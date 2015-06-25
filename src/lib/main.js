@@ -254,7 +254,7 @@ layout.listTitle.on('keypress', function(ch, key) {
 var toggleStoriesTab = function() {
   layout.paneStories.toggle(); 
   layout.screen.render();
-}
+};
 
 /*
  * Init
