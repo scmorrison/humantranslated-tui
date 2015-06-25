@@ -47,6 +47,10 @@ local.properties
 data/
 mongod
 
+# Local configs
+# =============
+conf.json
+
 # General
 # =======
 *.log

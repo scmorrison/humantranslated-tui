@@ -3,6 +3,13 @@ HumanTranslated CLI client
 
 The CLI client is the first client to test and integrate new API features. 
 
+# Requirements
+
+Debian / Ubuntu
+
+* ncurses-base
+* ncurses-term
+
 # Build
 
 ```
