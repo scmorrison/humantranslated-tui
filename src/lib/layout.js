@@ -34,7 +34,7 @@ var title = blessed.box({
   height: '3%',
   width: screen.width,
   align: 'left',
-  content: '{#d33682-fg}HumanTranslated{/#d33682-fg} | [n]ew, [v]iew [e]dit [d]elete [s]hare',
+  content: '{#d33682-fg}{bold}HumanTranslated{/bold}{/#d33682-fg} | [n]ew, [v]iew [e]dit [d]elete [s]hare',
   tags: true,
   style: {
     fg: '#d33682',
@@ -331,7 +331,31 @@ var helpView = blessed.box({
   content: "GLOBAL\nESC = Close pane\nn = New\ne = Edit\nd = Delete\ns = Share\n\nTABS\nS = Stories\nL = Labels\nC = Contacts\nP = Preferences\n\nTABS\nS = Stories\nL = Labels\nC = Contacts\nP = Preferences\n\nTABS\nS = Stories\nL = Labels\nC = Contacts\nP = Preferences\n\nTABS\nS = Stories\nL = Labels\nC = Contacts\nP = Preferences\n\nTABS\nS = Stories\nL = Labels\nC = Contacts\nP = Preferences\n\nTABS\nS = Stories\nL = Labels\nC = Contacts\nP = Preferences\n\nTABS\nS = Stories\nL = Labels\nC = Contacts\nP = Preferences"
 });
 
-var storyView = blessed.box({
+var storyView = blessed.textarea({
+  parent: screen,
+  width: '90%',
+  height: '90%',
+  border: {
+    type: 'line',
+    scrollbar: {
+      bg: 'red',
+      fg: 'blue'
+    }
+  },
+  tags: true,
+  top: 'center',
+  left: 'center',
+  scrollable:  {
+    ch: ' '
+  },
+  alwaysScroll: true,
+  scrollbars: true,
+  keys: true,
+  inputOnFocus: false,
+  vi: true
+});
+
+var storyEditForm = blessed.textarea({
   parent: screen,
   width: '90%',
   height: '90%',
@@ -345,21 +369,9 @@ var storyView = blessed.box({
   scrollable: true,
   alwaysScroll: true,
   scrollbars: true,
-  vi: true
-});
-
-var storyEditForm = blessed.form({
-  parent: screen,
-  width: '90%',
-  height: '90%',
-  border: {
-    type: 'line'
-  },
   keys: true,
-  tags: true,
-  top: 'center',
-  left: 'center',
-  vi: true
+  vi: true,
+  mouse: true
 });
 
 var storyEditSubmit = blessed.button({
