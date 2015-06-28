@@ -243,6 +243,7 @@ layout.listTitle.on('keypress', function(ch, key) {
         layout.storyView.setContent("{yellow-fg}{bold}"+result[arrayIndex].title+"{/bold}{/yellow-fg}\n\n"+result[arrayIndex].content);
         layout.storyView.setValue(result[arrayIndex].title+"\n\n"+result[arrayIndex].content);
         layout.screen.append(layout.storyView);
+        layout.storyView.scrollTo(0);
         layout.storyView.focus();
         /**
          * Launch external editor (vim, nano, etc.)
@@ -281,8 +282,9 @@ layout.listTitle.on('keypress', function(ch, key) {
         };
         humantranslated.saveStory(conf.username, conf.password, story, function(err, res) {
           if(err) console.log(err);
-          layout.listTitle.focus();
-          layout.screen.render();
+          initStories();
+          //layout.listTitle.focus();
+          //layout.screen.render();
         }); 
       });
     }
@@ -301,7 +303,7 @@ var toggleStoriesTab = function() {
 /*
  * Init
  */
-var init = function() {
+var initStories = function() {
   //Clear all lists
   layout.listTitle.clearItems();
   layout.listContent.clearItems();
@@ -353,4 +355,4 @@ var init = function() {
 }
 
 //Start
-init();
+initStories();
