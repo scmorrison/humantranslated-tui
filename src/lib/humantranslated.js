@@ -94,7 +94,7 @@ module.exports = (function(request) {
     /**
      * @param {Object} userData {username: String, password: SHA1String}
      */
-    saveStory: function(username, password, story, cb) {
+    updateStory: function(username, password, story, cb) {
 
       var authOptions = getAuthHeaderOptions(username, password);
       

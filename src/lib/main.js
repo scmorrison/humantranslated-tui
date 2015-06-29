@@ -51,7 +51,7 @@ var arrayIndex = 0,
 
 // Pane: Header
 layout.screen.append(layout.paneHeader);
-layout.screen.append(layout.logTextarea);
+
 layout.paneHeader.append(layout.title);
 layout.paneHeader.append(layout.tabStories);
 layout.paneHeader.append(layout.tabLabels);
@@ -67,6 +67,7 @@ layout.paneStories.append(layout.titleWordCount);
 layout.paneStories.append(layout.titleCreated);
 layout.paneStories.append(layout.messageLoading);
 layout.messageLoading.hide();
+layout.paneStories.append(layout.logTextarea);
 layout.screen.append(layout.helpView);
 layout.helpView.hide();
 
@@ -167,9 +168,26 @@ layout.storyView.on('keypress', function(ch, key) {
   }
 });
 
-
-layout.storyView.on('keypress', function(ch, key) {
-
+// Watch the storyEditTextarea for changes
+layout.storyEditTextarea.on('focus', function() {
+  var lines = layout.storyEditTextarea.getValue().split("\n");
+  // Make the first line the new title
+  var title = lines[0];
+  // Remove the first line (title)
+  lines.splice(0,1);
+  // Rejoin the lines and strip leading and training newlines
+  var content = lines.join("\n").replace(/^\s+|\s+$/g, '');
+  var story = {
+    '_id': result[arrayIndex]._id,
+    'title': title,
+    'content': content,
+    'created': result[arrayIndex].created
+  };
+  humantranslated.updateStory(conf.username, conf.password, story, function(err, res) {
+    if(err) console.log(err);
+    // Refresh / redraw the Stories tab
+    initStories();
+  }); 
 });
 
 //If press 'Cancel'
@@ -259,33 +277,11 @@ layout.listTitle.on('keypress', function(ch, key) {
     //If we have content
     if(result.length > 0) {
       layout.storyEditTextarea.setValue(result[arrayIndex].title+"\n\n"+result[arrayIndex].content);
-      //layout.screen.append(layout.storyEditForm);
-      //layout.storyEditTextarea.scrollTo(0);
-      //layout.storyEditTextarea.focus();*/
-
       /**
        * Launch external editor (vim, nano, etc.)
        */
-      layout.storyEditTextarea.readEditor(function(err, data) {
-        var lines = layout.storyEditTextarea.getValue().split("\n");
-        // Make the first line the new title
-        var title = lines[0];
-        // Remove the first line (title)
-        lines.splice(0,1);
-        // Rejoin the lines and strip leading and training newlines
-        var content = lines.join("\n").replace(/^\s+|\s+$/g, '');
-        var story = {
-          '_id': result[arrayIndex]._id,
-          'title': title,
-          'content': content,
-          'created': result[arrayIndex].created
-        };
-        humantranslated.saveStory(conf.username, conf.password, story, function(err, res) {
-          if(err) console.log(err);
-          initStories();
-          //layout.listTitle.focus();
-          //layout.screen.render();
-        }); 
+      layout.storyEditTextarea.readEditor(function(data) {
+        return true;
       });
     }
   }
