@@ -73,6 +73,8 @@ layout.messageSaving.hide();
 layout.paneStories.append(layout.logTextarea);
 layout.screen.append(layout.helpView);
 layout.helpView.hide();
+layout.screen.append(layout.confirmPrompt);
+layout.confirmPrompt.hide();
 
 /**
  * Exit
@@ -171,9 +173,8 @@ layout.storyView.on('keypress', function(ch, key) {
   }
 });
 
-// Watch the storyEditTextarea for changes
-var saveStory = function(story) {
-//layout.storyEditTextarea.on('focus', function() {
+// Process modified story text, update on server if changed
+var processEditedStory = function(story) {
   var lines = story.split("\n");
   //var lines = layout.storyEditTextarea.getValue().split("\n");
   // Make the first line the new title
@@ -204,22 +205,52 @@ var saveStory = function(story) {
   }
 };
 
-/*layout.storyEditTextarea.on('blur', function() {
-  redrawStories();
-});*/
+// Process new story text and save to server
+var processNewStory = function(story) {
+  var lines = story.split("\n");
+  // Make the first line the new title
+  var title = lines[0];
+  // Remove the first line (title)
+  lines.splice(0,1);
+  // Rejoin the lines and strip leading and training newlines
+  var content = lines.join("\n").replace(/^\s+|\s+$/g, '');
+  // Prepare the story JSON
+  var storyJSON = {
+    'title': title,
+    'content': content
+  };
+  // Update the story on the server
+  humantranslated.newStory(conf.username, conf.password, storyJSON, function(err, res) {
+    if(err) console.log(err);
+    layout.messageSaving.show();
+    // Refresh / redraw the Stories tab
+    initStories();
+  });
+};
+
+// Delete story from server
+var deleteStory = function(story_id) {
+  // Update the story on the server
+  humantranslated.deleteStory(conf.username, conf.password, story_id, function(err, res) {
+    if(err) console.log(err);
+    layout.messageSaving.show();
+    // Refresh / redraw the Stories tab
+    initStories();
+  });
+};
 
 //If press 'Cancel'
-layout.storyEditCancel.on('press', function() {
+/*layout.storyEditCancel.on('press', function() {
   layout.screen.remove(layout.storyEditForm);
   layout.listTitle.focus();
   layout.screen.render();
-});
+});*/
 
 //If press 'Save'
-layout.storyEditSubmit.on('press', function() {
+/*layout.storyEditSubmit.on('press', function() {
   // Save story
 
-  humantranslated.saveStory(conf.APIKEY, {
+  humantranslated.processEditedStory(conf.APIKEY, {
     username: conf.username,
     password: conf.password
   }, {
@@ -239,6 +270,13 @@ layout.storyEditSubmit.on('press', function() {
     setTimeout(function(){ layout.messageLoading.hide(); layout.listTitle.focus(); init(); }, 2000);
     layout.screen.render();
   });
+});
+*/
+
+layout.confirmPrompt.on('keypress', function(ch, key) {
+  if(key.name === "c" || key.name === "escape") {
+    return;
+  }
 });
 
 /**
@@ -281,32 +319,52 @@ layout.listTitle.on('keypress', function(ch, key) {
         layout.screen.append(layout.storyView);
         layout.storyView.scrollTo(0);
         layout.storyView.focus();
-        /**
-         * Launch external editor (vim, nano, etc.)
-         */
-        /*layout.storyView.key(['e'], function () {
-          layout.storyView.readEditor(function(data) {
-            var newTitle = data.indexOf("\n");
-            layout.storyView.setContent("{yellow-fg}{bold}"+newTitle+"{/bold}{/yellow-fg}\n\n"+data);
-          });
-        })*/
       }
   } else if(key.name === "e") {
     //If we have content
     if(result.length > 0) {
-      layout.storyEditTextarea.setValue(result[arrayIndex].title+"\n\n"+result[arrayIndex].content);
       var story_text = result[arrayIndex].title+"\n\n"+result[arrayIndex].content;
-      //layout.screen.append(layout.storyEditTextarea);
-      //layout.storyEditTextarea.scrollTo(0);
-      //layout.storyEditTextarea.focus();
       /**
-       * Launch external editor (vim, nano, etc.)
+       * Edit existing story in external editor (vim, nano, etc.)
        */
       layout.screen.readEditor({value: story_text}, function(err, story) {
-        saveStory(story); 
+        processEditedStory(story); 
       });
     }
+  } else if(key.name === "n") {
+    /**
+     * Create a new story in external editor (vim, nano, etc.)
+     */
+    layout.screen.readEditor(function(err, story) {
+      processNewStory(story); 
+    });
+
+  } else if(key.name === "d") {
+    /**
+     * Delete the story
+     */
+    // Confirm delete?
+    //var question = layout.createQuestion();
+    /*question._.ask("Delete this story from server?", function(err, response) {
+      if(response === true) {
+        var story_id = result[arrayIndex]._id;
+        deleteStory(story_id); 
+      }
+    });*/
+
+    layout.confirmPrompt.focus();
+    layout.screen.render();
+    layout.confirmPrompt.ask("Delete this story from server? ", function(err, response) {
+      if (err) return layout.screen._.msg.error(err.message);
+      if (!response) return layout.listTitle.focus();
+
+      if(response === true) {
+        var story_id = result[arrayIndex]._id;
+        deleteStory(story_id); 
+      }
+    });
   }
+
   layout.screen.render();
 });
 
@@ -334,7 +392,7 @@ var redrawStories = function() {
   layout.listWordCount.clearItems();
   layout.listCreated.clearItems();
 
-
+  // Hide messages, time to list stories
   layout.messageLoading.hide();
   layout.messageSaving.hide();
 
@@ -376,14 +434,13 @@ var initStories = function() {
 
       layout.messageLoading.show();
       layout.screen.render();
-
       redrawStories();
 
     } else {
       console.error(res);
     }
   });
-}
+};
 
 //Start
 initStories();
