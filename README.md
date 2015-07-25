@@ -1,7 +1,7 @@
-HumanTranslated CLI client
+HumanTranslated TUI client
 ==========================
 
-The CLI client is the first client to test and integrate new API features. 
+The TUI client is the first client to test and integrate new API features. 
 
 # Requirements
 
